@@ -45,11 +45,16 @@ export const glpiApi = {
 
   async initSessionAuto() {
     if (userToken) {
-      const data = await request('GET', '/initSession', undefined, {
-        Authorization: `user_token ${userToken}`,
-      })
-      sessionToken = data.session_token
-      return sessionToken
+      try {
+        const data = await request('GET', '/initSession', undefined, {
+          Authorization: `user_token ${userToken}`,
+        })
+        sessionToken = data.session_token
+        return sessionToken
+      } catch (e) {
+        // user token invalid or expired — fallback to basic auth
+        console.warn('glpiApi: user token init failed, falling back to basic auth', e.message)
+      }
     }
 
     return this.initSession(loginFallback, passwordFallback)
