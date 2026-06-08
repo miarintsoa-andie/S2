@@ -3,47 +3,24 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { glpiApi } from '../services/glpiApi.js'
 
 const routes = [
-    {
-        path: '/login',
-        component: () => import('../views/LoginView.vue'),
-        meta: { public: true }
-    },
-    {
-        path: '/',
-        redirect: '/tickets',
-    },
-    {
-        path: '/tickets',
-        component: () => import('../views/TicketsView.vue'),
-    },
-    {
-        path: '/reinitialisation',
-        component: () => import('../views/ReinitialisationView.vue'),
-    },
-    {
-        path: '/import',
-        component: () => import('../views/ImportView.vue'),
-    },
-    {
-        path: '/elements',
-        component: () => import('../views/ElementsView.vue'),
-        meta: { public: true }
-    },
-    { path: '/dashboard', component: () => import('../views/DashboardView.vue'), meta: { backoffice: true } }
+  { path: '/', component: () => import('../views/LandingView.vue'), meta: { public: true } },
+  { path: '/login', component: () => import('../views/LoginView.vue'), meta: { public: true } },
+  { path: '/elements', component: () => import('../views/ElementsView.vue') },
+  { path: '/tickets', component: () => import('../views/TicketsView.vue') },
+  { path: '/reinitialisation', component: () => import('../views/ReinitialisationView.vue') },
+  { path: '/import', component: () => import('../views/ImportView.vue') },
+  { path: '/dashboard', component: () => import('../views/DashboardView.vue'), meta: { backoffice: true } },
 ]
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes,
-})
+const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to) => {
-    if (to.path !== '/login' && !glpiApi.isAuthenticated()) {
-        return '/login'
-    }
-    // if (glpiApi.isAuthenticated()) {
-    //     return '/dashboard'
-    // }
+  // allow public routes (landing, login)
+  if (to.meta && to.meta.public) return true
+  // protected routes require an active GLPI session
+  if (glpiApi.isAuthenticated()) return true
+  // otherwise send user to landing to init session
+  return '/'
 })
 
 export default router

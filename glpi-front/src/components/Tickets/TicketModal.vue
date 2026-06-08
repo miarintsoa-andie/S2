@@ -62,16 +62,33 @@
 
         <!-- Description -->
         <div class="field">
-          <label for="t-content">Description</label>
+          <label for="t-content">Description <span class="req">*</span></label>
           <textarea
             id="t-content"
             v-model="form.content"
             rows="4"
             placeholder="Décrire le problème ou la demande…"
+            required
           />
         </div>
 
-        <p v-if="saveError" class="error">{{ saveError }}</p>
+        <!-- Assign elements -->
+        <div class="field">
+          <label>Assigner des éléments (optionnel)</label>
+          <div class="elements-list">
+            <div v-if="elemsLoading">Chargement des éléments…</div>
+            <div v-else>
+              <label v-for="it in elements" :key="it.id" class="el-choice">
+                <input type="checkbox" :value="it.id" v-model="selectedElements" />
+                <span>{{ it._typeLabel ? `${it._typeLabel} — ` : '' }}{{ it.name }}</span>
+              </label>
+              <div v-if="elements.length===0">Aucun élément disponible.</div>
+            </div>
+          </div>
+        </div>
+
+        <p v-if="validationError" class="error">{{ validationError }}</p>
+        <p v-else-if="saveError" class="error">{{ saveError }}</p>
 
         <div class="modal-footer">
           <button type="submit" class="btn-primary" :disabled="saving">
@@ -85,7 +102,7 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 
 const props = defineProps({
   ticket: Object,
@@ -96,6 +113,8 @@ const emit = defineEmits(['save', 'close'])
 
 const isEdit = computed(() => !!props.ticket?.id)
 
+import { useElements } from '../../composables/useElements.js'
+
 const form = reactive({
   name: props.ticket?.name ?? '',
   type: String(props.ticket?.type ?? 1),
@@ -105,7 +124,21 @@ const form = reactive({
   content: props.ticket?.content ?? '',
 })
 
+const { allItems, loadAll, loading: elemsLoading } = useElements()
+const elements = allItems
+const selectedElements = ref(props.ticket?.items?.map(i=>i.id) || [])
+
+const validationError = ref('')
+onMounted(() => { loadAll().catch(()=>{}) })
+
 function onSubmit() {
+  // minimal validation: name + content required
+  validationError.value = ''
+  if (!form.name || !form.content) {
+    validationError.value = 'Le nom et la description sont obligatoires.'
+    return
+  }
+
   emit('save', {
     name: form.name,
     type: Number(form.type),
@@ -113,6 +146,8 @@ function onSubmit() {
     urgency: Number(form.urgency),
     priority: Number(form.priority),
     content: form.content,
+    // attach selected element ids — backend will interpret as needed
+    items: selectedElements.value
   })
 }
 </script>

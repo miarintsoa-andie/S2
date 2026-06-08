@@ -1,14 +1,15 @@
 import {ref ,computed} from 'vue'
-import { glpiApi } from '../services/glpiApi'
+import { glpiApi } from '../services/glpiApi.js'
 
+// Icons removed to keep select options clean (UI-only change)
 const assets_types = [
-    {key:'Computer',label:'Ordinateurs',icon:'🖥'},
-    {key:'Monitor',label:'Moniteurs',icon:'🖱'},
-    {key:'NetworkEquipment',label:'Reseau',icon:'📡'},
-    {key:'Printer',label:'Imprimantes',icon:'🖨'},
-    {key:'Phone',label:'Telephones',icon:'📱'},
-    {key:'Software',label:'Logiciels',icon:'💿'},   
-] 
+    {key:'Computer',label:'Ordinateurs'},
+    {key:'Monitor',label:'Moniteurs'},
+    {key:'NetworkEquipment',label:'Réseau'},
+    {key:'Printer',label:'Imprimantes'},
+    {key:'Phone',label:'Téléphones'},
+    {key:'Software',label:'Logiciels'},   
+]
 
 export function useElements(){
     const allItems = ref([])
@@ -47,7 +48,7 @@ export function useElements(){
         let list = allItems.value
 
         if(filterType.value){
-            list = list.filter((i)=>i._type === filterType)
+            list = list.filter((i)=>i._type === filterType.value)
         }
 
         if(searchText.value.trim()){

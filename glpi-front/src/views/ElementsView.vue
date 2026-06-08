@@ -1,11 +1,41 @@
 <template>
   <div class="elements-page">
+    <!-- FrontOffice navbar (only UI) -->
+    <header class="elements-topbar">
+      <div class="elements-topbar-inner">
+        <div class="topbar-left">GLPI-NewApp</div>
+        <div class="topbar-center">
+          <RouterLink to="/tickets" class="topbar-link">Tickets</RouterLink>
+        </div>
+        <div class="topbar-right">
+          <RouterLink to="/login" class="topbar-admin">Se connecter en tant qu'admin</RouterLink>
+        </div>
+      </div>
+    </header>
     <div class="page-header">
       <h1>Parc informatique</h1>
-      <RouterLink to="/" class="btn-primary">
+      <!-- <RouterLink to="/" class="btn-primary">
         ＋ Signaler un problème
-      </RouterLink>
+      </RouterLink> -->
     </div>
+
+    <!-- Stat summary (reuse dashboard look) -->
+    <!-- <section class="dash-section">
+      <div class="section-title">
+        Éléments
+        <span class="section-total">Total : {{ stats.assetTotal ?? '—' }}</span>
+      </div>
+      <div class="cards-grid">
+        <StatCard
+          v-for="asset in stats.assets ?? []"
+          :key="asset.key"
+          :label="asset.label"
+          :total="asset.total"
+          :loading="loading || statsLoading"
+          :error="asset.error"
+        />
+      </div>
+    </section> -->
 
     <!-- Filtres -->
     <div class="filters-shell">
@@ -57,10 +87,13 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import ElementCard from '../components/Elements/ElementCard.vue'
 import ElementDetail from '../components/Elements/ElementDetail.vue'
+import StatCard from '../components/Dashboard/StatCard.vue'
 // import ElementFilters from '../components/Elements/ElementFilters.vue'
 import { useElements } from '../composables/useElements.js'
+import { useStats } from '../composables/useStats.js'
 
 const { filteredItems, loading, error, searchText, filterType, loadAll, clearFilters, assets_types } = useElements()
+const { stats, loading: statsLoading, loadAll: loadStats } = useStats()
 const page = ref(1)
 const PAGE_SIZE = 15
 const selectedItem = ref(null)
@@ -75,7 +108,10 @@ const pagedItems = computed(() => {
 
 function openDetail(item) { selectedItem.value = item }
 
-onMounted(loadAll)
+onMounted(() => {
+  loadAll()
+  loadStats()
+})
 </script>
 
 <style scoped>
@@ -87,6 +123,23 @@ onMounted(loadAll)
   flex-direction: column;
   gap: 1.25rem;
 }
+
+/* Topbar specific to elements page */
+.elements-topbar { width: 100%; }
+.elements-topbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+}
+.topbar-left { font-weight: 800; font-size: 1rem; color: var(--text); }
+.topbar-center { margin: 0 auto; }
+.topbar-link { text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 8px; color: var(--text); }
+.topbar-link.router-link-active { background: linear-gradient(135deg,var(--primary),var(--primary-strong)); color: #fff }
+.topbar-right { margin-left: auto }
+.topbar-admin { text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.9); color: var(--primary-strong) }
 
 .page-header {
   display: flex;

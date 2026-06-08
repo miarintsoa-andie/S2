@@ -3,10 +3,6 @@
     <div class="page-header">
       <h1>Tickets</h1>
       <button class="btn-primary" @click="openCreate">+ Nouveau ticket</button>
-      <button class="btn-primary" @click="router.push('/reinitialisation')">Reinitialisation</button>
-      <button class="btn-primary" @click="router.push('/elements')">Elements</button>
-      <button class="btn-primary" @click="router.push('/import')">Import</button>
-      <button class="btn-primary" @click="router.push('/dashboard')">Dashboard</button>
     </div>
 
     <!-- Barre de recherche et filtre statut -->
@@ -51,7 +47,7 @@
           <tr v-if="filteredTickets.length === 0">
             <td colspan="7" class="empty-row">Aucun ticket trouvé.</td>
           </tr>
-          <tr v-for="ticket in pagedTickets" :key="ticket.id">
+          <tr v-for="ticket in pagedTickets" :key="ticket.id" @click="openDetails(ticket)" class="clickable-row">
             <td class="col-id">{{ ticket.id }}</td>
             <td class="col-name">{{ ticket.name || '(sans titre)' }}</td>
             <td class="col-type">{{ typeLabel(ticket.type) }}</td>
@@ -63,8 +59,8 @@
             </td>
             <td class="col-date">{{ formatDate(ticket.date_creation) }}</td>
             <td class="col-actions">
-              <button class="btn-icon btn-edit" title="Modifier" @click="openEdit(ticket)">✎</button>
-              <button class="btn-icon btn-delete" title="Supprimer" @click="confirmDelete(ticket)">✕</button>
+              <button class="btn-icon btn-edit" title="Modifier" @click.stop="openEdit(ticket)">✎</button>
+              <button class="btn-icon btn-delete" title="Supprimer" @click.stop="confirmDelete(ticket)">✕</button>
             </td>
           </tr>
         </tbody>
@@ -93,6 +89,9 @@
       @close="closeModal"
     />
 
+    <!-- Détails ticket -->
+    <TicketDetails v-if="detailTicket" :ticket="detailTicket" @close="detailTicket = null" />
+
     <!-- Confirmation suppression -->
     <div v-if="deletingTicket" class="overlay">
       <div class="confirm-modal">
@@ -118,6 +117,7 @@ import { ref, computed, onMounted } from 'vue'
 import { glpiApi } from '../services/glpiApi.js'
 import { logs } from '../services/springApi.js'
 import TicketModal from '../components/Tickets/TicketModal.vue'
+import TicketDetails from '../components/Tickets/TicketDetails.vue'
 import { useRouter } from 'vue-router'
 
 
@@ -135,6 +135,7 @@ const editingTicket = ref(null)
 const saving = ref(false)
 const saveError = ref(null)
 const deletingTicket = ref(null)
+const detailTicket = ref(null)
 
 const STATUS_LABELS = { 1: 'Nouveau', 2: 'Assigné', 3: 'Planifié', 4: 'En attente', 5: 'Résolu', 6: 'Clos' }
 const STATUS_CLASSES = { 1: 's-new', 2: 's-assigned', 3: 's-planned', 4: 's-pending', 5: 's-solved', 6: 's-closed' }
@@ -202,6 +203,10 @@ function openEdit(ticket) {
   editingTicket.value = { ...ticket }
   saveError.value = null
   showModal.value = true
+}
+
+function openDetails(ticket) {
+  detailTicket.value = ticket
 }
 
 function closeModal() {
@@ -354,6 +359,8 @@ h1 {
 .tickets-table tr:hover td {
   background: #fafafa;
 }
+
+.clickable-row { cursor: pointer; }
 .col-id { width: 60px; }
 .col-type { width: 90px; }
 .col-status { width: 120px; }

@@ -2,7 +2,7 @@
     <div class="login-page">
         <form class="login-form" @submit.prevent="onSubmit">
             <div class="logo">
-                <span class="logo-text">GLPI</span>
+                <span class="logo-text">GLPI-NewApp</span>
             </div>
             <h2>Connexion</h2>
 
@@ -61,6 +61,8 @@ async function onSubmit() {
     error.value = null
     try {
         await glpiApi.initSessionAuto()
+        // notify app that session exists so navbars can appear
+        window.dispatchEvent(new CustomEvent('glpi:session-created'))
         router.push('./tickets')
     } catch (e) {
         error.value = e.message
@@ -94,9 +96,9 @@ async function onSubmit() {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(circle at top left, rgba(19, 99, 223, 0.14), transparent 32%),
-      radial-gradient(circle at bottom right, rgba(31, 157, 99, 0.1), transparent 30%);
+        background:
+            radial-gradient(circle at top left, rgba(0,31,63,0.12), transparent 32%),
+            radial-gradient(circle at bottom right, rgba(0,31,63,0.06), transparent 30%);
     pointer-events: none;
 }
 
@@ -116,7 +118,7 @@ async function onSubmit() {
     padding: 0.55rem 1rem;
     border-radius: 999px;
     letter-spacing: 0.18em;
-    box-shadow: 0 14px 24px rgba(19, 99, 223, 0.18);
+    box-shadow: 0 10px 20px rgba(0,31,63,0.16);
 }
 
 h2 {
@@ -152,15 +154,15 @@ input {
 }
 
 input:focus {
-    border-color: rgba(19, 99, 223, 0.5);
-    box-shadow: 0 0 0 4px rgba(19, 99, 223, 0.12);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 6px rgba(0,31,63,0.08);
 }
 
 .error {
-    color: var(--danger);
+    color: var(--black);
     font-size: 0.85rem;
     margin: 0;
-    background: rgba(214, 69, 69, 0.08);
+    background: rgba(0,31,63,0.06);
     padding: 0.6rem 0.75rem;
     border-radius: 12px;
     position: relative;
@@ -177,10 +179,10 @@ button {
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: transform 0.18s, box-shadow 0.18s;
+    transition: transform 0.12s, box-shadow 0.12s;
     position: relative;
     z-index: 1;
-    box-shadow: 0 14px 28px rgba(19, 99, 223, 0.16);
+    box-shadow: 0 10px 22px rgba(0,31,63,0.14);
 }
 
 button:hover:not(:disabled) {
