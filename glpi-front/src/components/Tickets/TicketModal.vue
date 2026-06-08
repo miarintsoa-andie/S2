@@ -146,8 +146,11 @@ function onSubmit() {
     urgency: Number(form.urgency),
     priority: Number(form.priority),
     content: form.content,
-    // attach selected element ids — backend will interpret as needed
-    items: selectedElements.value
+    // attach selected elements as objects { id, itemtype } so caller can create Item_Ticket
+    items: selectedElements.value.map((selId) => {
+      const it = elements.value.find((e) => e.id === selId || e.id === Number(selId))
+      return { id: Number(selId), itemtype: it?._type ?? it?._typeLabel ?? null }
+    })
   })
 }
 </script>

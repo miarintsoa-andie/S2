@@ -205,8 +205,27 @@ function openEdit(ticket) {
   showModal.value = true
 }
 
-function openDetails(ticket) {
-  detailTicket.value = ticket
+async function openDetails(ticket) {
+  // show basic details immediately
+  detailTicket.value = { ...ticket, items: [] }
+  try {
+    // fetch all Item_Ticket associations and filter client-side to avoid relying on backend query params
+    const raw = await glpiApi.getItemsRaw('Item_Ticket', { range: '0-999' })
+    const assocList = Array.isArray(raw) ? raw : (raw.data || [])
+    const filtered = assocList.filter((a) => String(a.tickets_id) === String(ticket.id))
+    const fetched = []
+    for (const a of filtered) {
+      try {
+        const item = await glpiApi.getItem(a.itemtype, a.items_id)
+        fetched.push({ id: a.items_id, itemtype: a.itemtype, name: item.name ?? item.display_name ?? item.serial ?? String(a.items_id) })
+      } catch (e) {
+        fetched.push({ id: a.items_id, itemtype: a.itemtype, name: `#${a.items_id}` })
+      }
+    }
+    detailTicket.value.items = fetched
+  } catch (e) {
+    // ignore — details view will show no items
+  }
 }
 
 function closeModal() {
@@ -234,7 +253,24 @@ async function onSave(formData) {
         action: 'CREATE', itemtype: 'Ticket', glpiId: created.id,
         payload: JSON.stringify({ input: formData }), status: 'SUCCESS',
       }).catch(() => {})
-      // Recharge pour avoir les champs complets
+
+      // If the modal emitted selected elements, create Item_Ticket associations
+      if (Array.isArray(formData.items) && formData.items.length) {
+        for (const it of formData.items) {
+          try {
+            await glpiApi.createItem('Item_Ticket', {
+              tickets_id: created.id,
+              itemtype: it.itemtype || it.itemType || it.item_type || null,
+              items_id: it.id,
+            })
+          } catch (e) {
+            // log but don't abort overall flow
+            await logs.create({ action: 'CREATE', itemtype: 'Item_Ticket', status: 'ERROR', errorMessage: e.message }).catch(()=>{})
+          }
+        }
+      }
+
+      // Reload tickets to reflect associations
       await loadTickets()
     }
     closeModal()
