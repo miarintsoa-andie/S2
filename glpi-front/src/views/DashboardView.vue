@@ -58,35 +58,19 @@ onMounted(loadAll)
 </script>
 
 <style scoped>
-.dashboard {
-  padding: 1.5rem;
-  max-width: 1180px;
-  margin: 0 auto;
-  border-radius: var(--radius-xl);
-}
+.dashboard { padding: 1.5rem 2rem; max-width: 1100px; margin: 0 auto; }
 .dash-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
 }
-.dash-header h1 { margin: 0; font-size: clamp(1.6rem, 2vw, 2.2rem); color: var(--text-strong); }
-.dash-meta { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
-.last-update {
-  font-size: 0.85rem;
-  color: var(--muted);
-  padding: 0.6rem 0.85rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid var(--line);
-}
+h1 { margin: 0; font-size: 1.5rem; }
+.dash-meta { display: flex; align-items: center; gap: 1rem; }
+.last-update { font-size: 0.85rem; color: #888; }
 .dash-section { margin-bottom: 2.5rem; }
 .section-title {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 1rem;
@@ -96,23 +80,19 @@ onMounted(loadAll)
 }
 .section-total {
   font-weight: 400;
-  color: var(--muted);
+  color: #888;
   font-size: 0.85rem;
   text-transform: none;
   letter-spacing: 0;
 }
 .cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--line);
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.9rem;
+  background: #fff; border: 1px solid #ccc;
+  padding: 0.45rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;
 }
 .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

@@ -1,0 +1,15 @@
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/controller/UserPreferenceController.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/model/UserPreference.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/repository/ActionLogRepository.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/GlpiSpringApplication.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/model/ActionLog.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/config/CorsConfig.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/controller/SnapshotController.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/controller/ActionLogController.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/controller/ImportHistoryController.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/model/Snapshot.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/repository/ImportHistoryRepository.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/repository/SnapshotRepository.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/repository/UserPreferenceRepository.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/model/ImportHistory.java
+/home/nyavo/Documents/S6/[ EVAL ]/glpi-spring/src/main/java/com/glpi/spring/model/SnapshotItem.java

@@ -73,118 +73,95 @@ async function onSubmit() {
 
 <style scoped>
 .login-page {
-    min-height: calc(100vh - 2rem);
-    display: grid;
-    place-items: center;
-    padding: 1rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f2f5;
 }
 
 .login-form {
-    position: relative;
-    overflow: hidden;
-    width: min(420px, 100%);
-    padding: 2.25rem 2rem;
-    border-radius: var(--radius-xl);
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
     gap: 1rem;
-}
-
-.login-form::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at top left, rgba(19, 99, 223, 0.14), transparent 32%),
-      radial-gradient(circle at bottom right, rgba(31, 157, 99, 0.1), transparent 30%);
-    pointer-events: none;
+    width: 320px;
 }
 
 .logo {
     display: flex;
     justify-content: center;
-    margin-bottom: 0.25rem;
-    position: relative;
-    z-index: 1;
+    margin-bottom: 0.5rem;
 }
 
 .logo-text {
-    background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+    background: #3498db;
     color: #fff;
-    font-size: 1.05rem;
-    font-weight: 800;
-    padding: 0.55rem 1rem;
-    border-radius: 999px;
-    letter-spacing: 0.18em;
-    box-shadow: 0 14px 24px rgba(19, 99, 223, 0.18);
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    letter-spacing: 2px;
 }
 
 h2 {
     margin: 0;
-    font-size: 1.45rem;
+    font-size: 1.2rem;
     text-align: center;
-    color: var(--text-strong);
-    position: relative;
-    z-index: 1;
+    color: #333;
 }
 
 .field {
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    position: relative;
-    z-index: 1;
 }
 
 label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--muted);
+    color: #555;
 }
 
 input {
-    padding: 0.8rem 0.95rem;
-    border: 1px solid rgba(148, 163, 184, 0.3);
-    border-radius: 14px;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
     font-size: 1rem;
-    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
-    background: rgba(255, 255, 255, 0.92);
+    transition: border-color 0.15s;
 }
 
 input:focus {
-    border-color: rgba(19, 99, 223, 0.5);
-    box-shadow: 0 0 0 4px rgba(19, 99, 223, 0.12);
+    outline: none;
+    border-color: #3498db;
 }
 
 .error {
-    color: var(--danger);
+    color: #e74c3c;
     font-size: 0.85rem;
     margin: 0;
-    background: rgba(214, 69, 69, 0.08);
-    padding: 0.6rem 0.75rem;
-    border-radius: 12px;
-    position: relative;
-    z-index: 1;
+    background: #fdf3f3;
+    padding: 0.4rem 0.6rem;
+    border-radius: 4px;
 }
 
 button {
-    margin-top: 0.25rem;
-    padding: 0.85rem;
-    background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+    padding: 0.7rem;
+    background: #3498db;
     color: #fff;
     border: none;
-    border-radius: 14px;
+    border-radius: 6px;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.18s, box-shadow 0.18s;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 14px 28px rgba(19, 99, 223, 0.16);
+    transition: background 0.15s;
 }
 
 button:hover:not(:disabled) {
-    transform: translateY(-1px);
+    background: #2980b9;
 }
 
 button:disabled {

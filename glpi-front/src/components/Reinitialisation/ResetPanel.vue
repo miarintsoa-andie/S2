@@ -102,48 +102,51 @@ function onRecommencer() {
 </script>
 
 <style scoped>
-.reset-panel {
-  width: min(760px, 100%);
-  padding: 2rem;
-  border-radius: var(--radius-xl);
-}
-
-h2 {
-  margin: 0 0 1.25rem;
-  font-size: clamp(1.4rem, 2vw, 1.8rem);
-  color: var(--text-strong);
-}
+.reset-panel { max-width: 640px; padding: 2rem; }
+h2 { margin: 0 0 1.5rem; font-size: 1.3rem; color: #222; }
 .field { margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
-label { font-size: 0.9rem; font-weight: 700; color: var(--muted); }
+label { font-size: 0.9rem; font-weight: 600; color: #555; }
 select {
-  max-width: 280px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  max-width: 240px;
 }
 .items-list {
-  border: 1px solid var(--line);
-  border-radius: 18px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   max-height: 320px;
   overflow-y: auto;
   margin: 0 0 1rem;
-  background: rgba(255, 255, 255, 0.9);
 }
 .list-header {
   padding: 0.6rem 1rem;
-  background: rgba(19, 99, 223, 0.05);
-  border-bottom: 1px solid var(--line);
+  background: #f7f8fa;
+  border-bottom: 1px solid #ddd;
   font-weight: 600;
   position: sticky;
   top: 0;
 }
 ul { list-style: none; margin: 0; padding: 0; }
-li { padding: 0.65rem 1rem; border-bottom: 1px solid rgba(148, 163, 184, 0.15); }
+li { padding: 0.45rem 1rem; border-bottom: 1px solid #f0f0f0; }
 li:last-child { border-bottom: none; }
 li label { font-weight: normal; display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
-.empty { color: var(--muted); font-style: italic; }
-.error { color: var(--danger); background: rgba(214, 69, 69, 0.08); padding: 0.6rem 0.75rem; border-radius: 12px; }
-.loading { color: var(--muted); font-style: italic; }
+.empty { color: #999; font-style: italic; }
+.error { color: #e74c3c; background: #fdf3f3; padding: 0.4rem 0.6rem; border-radius: 4px; }
+.loading { color: #888; font-style: italic; }
 .actions { margin-top: 1rem; }
 .btn-danger {
-  padding: 0.8rem 1.2rem;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.btn-danger:hover:not(:disabled) { background: #c0392b; }
 .btn-danger:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>

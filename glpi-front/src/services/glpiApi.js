@@ -1,15 +1,14 @@
 // src/services/glpiApi.js
 const BASE_URL = '/api'
 let sessionToken = null
-const appToken = import.meta.env.VITE_GLPI_APP_TOKEN?.trim() || ''
-const userToken = import.meta.env.VITE_GLPI_USER_TOKEN?.trim() || ''
-const loginFallback = import.meta.env.VITE_GLPI_LOGIN?.trim() || 'glpi'
-const passwordFallback = import.meta.env.VITE_GLPI_PASSWORD?.trim() || 'glpi'
 
 function headers(extra = {}) {
   const h = { 'Content-Type': 'application/json', ...extra }
   if (sessionToken) h['Session-Token'] = sessionToken
+
+  const appToken = import.meta.env.VITE_GLPI_APP_TOKEN
   if (appToken) h['App-Token'] = appToken
+
   return h
 }
 
@@ -43,16 +42,23 @@ export const glpiApi = {
     return sessionToken
   },
 
+  async initSessionWithToken(userToken) {
+    const data = await request('GET', '/initSession', undefined, {
+      Authorization: `user_token ${userToken}`,
+    })
+    sessionToken = data.session_token
+    return sessionToken
+  },
+
   async initSessionAuto() {
+    const userToken = import.meta.env.VITE_GLPI_USER_TOKEN
     if (userToken) {
-      const data = await request('GET', '/initSession', undefined, {
-        Authorization: `user_token ${userToken}`,
-      })
-      sessionToken = data.session_token
-      return sessionToken
+      return this.initSessionWithToken(userToken)
     }
 
-    return this.initSession(loginFallback, passwordFallback)
+    const login = import.meta.env.VITE_GLPI_LOGIN ?? 'glpi'
+    const password = import.meta.env.VITE_GLPI_PASSWORD ?? 'glpi'
+    return this.initSession(login, password)
   },
 
   async killSession() {

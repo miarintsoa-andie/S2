@@ -56,6 +56,13 @@ async function onLogout() {
 * {
   box-sizing: border-box;
 }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+}
 </style>
 
 <style scoped>
@@ -63,31 +70,24 @@ async function onLogout() {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
 }
 
 .navbar {
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--text-strong);
+  background: #2c3e50;
+  color: #fff;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.95rem 1.25rem;
-  min-height: 64px;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(18px);
-  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+  height: 52px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .nav-brand {
   font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-strong);
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  color: #ecf0f1;
   flex-shrink: 0;
 }
 
@@ -95,59 +95,40 @@ async function onLogout() {
   display: flex;
   gap: 0.25rem;
   flex: 1;
-  flex-wrap: wrap;
 }
 
 .nav-links a {
-  color: var(--muted);
+  color: #bdc3c7;
   text-decoration: none;
-  padding: 0.55rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid transparent;
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
   font-size: 0.9rem;
-  transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.18s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .nav-links a:hover {
-  background: rgba(19, 99, 223, 0.08);
-  color: var(--primary-strong);
-  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .nav-links a.router-link-active {
-  background: var(--primary-soft);
-  color: var(--primary-strong);
-  border-color: rgba(19, 99, 223, 0.12);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
 }
 
 .btn-logout {
-  margin-left: auto;
-  padding: 0.62rem 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(19, 99, 223, 0.18);
-  background: linear-gradient(135deg, var(--primary), var(--primary-strong));
-  color: #fff;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #bdc3c7;
+  padding: 0.3rem 0.85rem;
+  border-radius: 4px;
   cursor: pointer;
-  font-size: 0.88rem;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s;
 }
 
 .btn-logout:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(19, 99, 223, 0.18);
-}
-
-.navbar-front .nav-brand {
-  color: var(--primary-strong);
-}
-
-.nav-admin-link {
-  margin-left: auto;
-  text-decoration: none;
-  padding: 0.62rem 1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(19, 99, 223, 0.18);
-  color: var(--primary-strong);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 </style>

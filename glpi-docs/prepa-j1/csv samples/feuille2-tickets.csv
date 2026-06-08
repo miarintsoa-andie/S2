@@ -1,0 +1,11 @@
+Ref_Ticket,Date,Heure,Type,Titre,Description,Status,Priority,Items
+1,03/06/2026,13:45,Incident,Tsy mandeha,hafahafa be,New,Medium,"[""PC-ADM-001""]"
+2,04/06/2026,09:15,Incident,Écran cassé salle 301,La dalle du moniteur MN-FORM-002 est brisée suite à une chute. Remplacement urgent nécessaire.,New,High,"[""MN-FORM-002""]"
+3,04/06/2026,13:45,Incident,PC lent comptabilité,Le PC-COMPTA-002 est très lent au démarrage depuis la mise à jour Windows. Durée de boot supérieure à 10 minutes.,New,Medium,"[""PC-ADM-001"",""MN-FORM-002""]"
+4,05/06/2026,08:30,Demande,Installation logiciel Excel,Demande d'installation de Microsoft Excel 2021 sur le poste PC-RH-001 pour le service RH.,New,Low,"[""PC-RH-001""]"
+5,05/06/2026,10:00,Incident,Panne réseau laboratoire,Les postes PC-LAB-001 et PC-LAB-002 n'ont plus accès à Internet depuis ce matin. Les autres postes du bâtiment fonctionnent normalement.,New,High,"[""PC-LAB-001"",""PC-LAB-002""]"
+6,05/06/2026,14:20,Demande,Ajout second écran direction,La directrice souhaite disposer d'un second moniteur sur son poste de travail PC-DIR-001 pour améliorer sa productivité.,New,Low,"[""PC-DIR-001"",""MN-DIR-001""]"
+7,06/06/2026,09:45,Incident,Clavier non reconnu,Le clavier USB du poste PC-COMPTA-001 n'est plus détecté après redémarrage. Remplacement souhaité rapidement.,New,Medium,"[""PC-COMPTA-001""]"
+8,06/06/2026,11:30,Incident,Écran bleu répété PC-SALLE302,Le poste PC-SALLE302-001 redémarre de façon aléatoire avec un écran bleu (BSOD). Erreur kernel visible dans les logs.,New,High,"[""PC-SALLE302-001""]"
+9,09/06/2026,08:00,Demande,Migration données RH,Demande de sauvegarde et migration des données du poste PC-RH-002 actuellement en maintenance vers le poste de prêt disponible au magasin.,Pending,Medium,"[""PC-RH-002"",""PC-FORM-001""]"
+10,09/06/2026,15:00,Incident,Surchauffe PC laboratoire,Le poste PC-LAB-003 surchauffe anormalement et s'éteint automatiquement après 30 minutes d'utilisation. Ventilateur potentiellement défaillant.,New,Very High,"[""PC-LAB-003""]"

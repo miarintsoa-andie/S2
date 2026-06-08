@@ -8,17 +8,15 @@
     </div>
 
     <!-- Filtres -->
-    <div class="filters-shell">
-      <div class="filters">
-        <input v-model="searchText" type="search" placeholder="Rechercher par nom…" class="filter-input" />
-        <select v-model="filterType" class="filter-select">
-          <option value="">Tous les types</option>
-          <option v-for="t in assets_types" :key="t.key" :value="t.key">
-            {{ t.icon }} {{ t.label }}
-          </option>
-        </select>
-        <button v-if="searchText || filterType" class="btn-clear" @click="clearFilters">✕</button>
-      </div>
+    <div class="filters">
+      <input v-model="searchText" type="search" placeholder="Rechercher par nom…" class="filter-input" />
+      <select v-model="filterType" class="filter-select">
+        <option value="">Tous les types</option>
+        <option v-for="t in assets_types" :key="t.key" :value="t.key">
+          {{ t.icon }} {{ t.label }}
+        </option>
+      </select>
+      <button v-if="searchText || filterType" class="btn-clear" @click="clearFilters">✕</button>
     </div>
 
     <!-- Résumé -->
@@ -27,8 +25,8 @@
     </div>
 
     <!-- État -->
-    <div v-if="loading" class="state-msg panel-like">Chargement du parc…</div>
-    <div v-else-if="error" class="error-msg panel-like">{{ error }}</div>
+    <div v-if="loading" class="state-msg">Chargement du parc…</div>
+    <div v-else-if="error" class="error-msg">{{ error }}</div>
 
     <!-- Liste -->
     <div v-else class="list-wrapper">
@@ -77,121 +75,3 @@ function openDetail(item) { selectedItem.value = item }
 
 onMounted(loadAll)
 </script>
-
-<style scoped>
-.elements-page {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 1.5rem 1.5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.page-header h1 {
-  margin: 0;
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  color: var(--text-strong);
-}
-
-.filters-shell {
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--line);
-  border-radius: 26px;
-  box-shadow: var(--shadow-md);
-  padding: 1rem;
-}
-
-.filters {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) auto;
-  gap: 0.85rem;
-  align-items: center;
-}
-
-.filter-input,
-.filter-select {
-  min-height: 50px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.95);
-}
-
-.btn-clear {
-  width: 50px;
-  height: 50px;
-  border-radius: 16px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.92);
-  color: var(--muted);
-  cursor: pointer;
-}
-
-.result-summary {
-  align-self: flex-end;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.panel-like {
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  box-shadow: var(--shadow-md);
-}
-
-.list-wrapper {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid var(--line);
-  border-radius: 26px;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-
-.empty {
-  min-height: 140px;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 0.6rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-md);
-  width: fit-content;
-  align-self: center;
-}
-
-.pagination button {
-  padding: 0.6rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.95);
-  cursor: pointer;
-}
-
-@media (max-width: 900px) {
-  .filters {
-    grid-template-columns: 1fr;
-  }
-
-  .result-summary {
-    align-self: flex-start;
-  }
-}
-</style>

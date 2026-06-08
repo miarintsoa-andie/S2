@@ -10,9 +10,6 @@ import ResetPanel from '../components/Reinitialisation/ResetPanel.vue'
 
 <style scoped>
 .page {
-  padding: 1.5rem;
-  max-width: 1120px;
-  margin: 0 auto;
-  border-radius: var(--radius-xl);
+  padding: 2rem;
 }
 </style>

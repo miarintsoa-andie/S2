@@ -38,12 +38,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
+    // Laisser passer les pages publiques (FrontOffice et Login)
+    if (to.meta.public) {
+        return true
+    }
+    
+    // Protéger le reste (BackOffice)
     if (to.path !== '/login' && !glpiApi.isAuthenticated()) {
         return '/login'
     }
-    // if (glpiApi.isAuthenticated()) {
-    //     return '/dashboard'
-    // }
 })
 
 export default router
