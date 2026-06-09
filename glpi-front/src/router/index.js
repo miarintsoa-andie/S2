@@ -10,6 +10,7 @@ const routes = [
   { path: '/reinitialisation', component: () => import('../views/ReinitialisationView.vue') },
   { path: '/import', component: () => import('../views/ImportView.vue') },
   { path: '/dashboard', component: () => import('../views/DashboardView.vue'), meta: { backoffice: true } },
+  { path: '/kanban-settings', component: () => import('../views/KanbanSettingsView.vue'), meta: { backoffice: true } },
 ]
 
 const router = createRouter({ history: createWebHistory(), routes })

@@ -14,7 +14,7 @@ export default defineConfig({
       },
       // /spring/... → http://localhost:8081/spring/...
       '/spring': {
-        target: 'http://localhost:8081',
+        target: 'http://localhost:8075',
         changeOrigin: true,
       },
     },

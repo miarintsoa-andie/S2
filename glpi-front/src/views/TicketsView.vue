@@ -2,7 +2,7 @@
   <div class="tickets-page">
     <div class="page-header">
       <h1>Tickets</h1>
-      <button class="btn-primary" @click="openCreate">+ Nouveau ticket</button>
+      <button class="btn-primary" @click="openCreate">Ajouter 1 ticket</button>
     </div>
 
     <!-- Barre de recherche et filtre statut -->
@@ -29,52 +29,43 @@
     <div v-if="loading" class="state-msg">Chargement…</div>
     <div v-else-if="error" class="error-msg">{{ error }}</div>
 
-    <!-- Tableau -->
-    <div v-else class="table-wrapper">
-      <table class="tickets-table">
-        <thead>
-          <tr>
-            <th class="col-id">ID</th>
-            <th class="col-name">Nom</th>
-            <th class="col-type">Type</th>
-            <th class="col-status">Statut</th>
-            <th class="col-priority">Priorité</th>
-            <th class="col-date">Créé le</th>
-            <th class="col-actions">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="filteredTickets.length === 0">
-            <td colspan="7" class="empty-row">Aucun ticket trouvé.</td>
-          </tr>
-          <tr v-for="ticket in pagedTickets" :key="ticket.id" @click="openDetails(ticket)" class="clickable-row">
-            <td class="col-id">{{ ticket.id }}</td>
-            <td class="col-name">{{ ticket.name || '(sans titre)' }}</td>
-            <td class="col-type">{{ typeLabel(ticket.type) }}</td>
-            <td class="col-status">
-              <span :class="['badge', statusClass(ticket.status)]">{{ statusLabel(ticket.status) }}</span>
-            </td>
-            <td class="col-priority">
-              <span :class="['priority', priorityClass(ticket.priority)]">{{ priorityLabel(ticket.priority) }}</span>
-            </td>
-            <td class="col-date">{{ formatDate(ticket.date_creation) }}</td>
-            <td class="col-actions">
-              <button class="btn-icon btn-edit" title="Modifier" @click.stop="openEdit(ticket)">✎</button>
-              <button class="btn-icon btn-delete" title="Supprimer" @click.stop="confirmDelete(ticket)">✕</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Pagination -->
-      <div class="pagination">
-        <span class="page-info">
-          {{ filteredTickets.length }} ticket(s) —
-          page {{ currentPage }} / {{ totalPages || 1 }}
-        </span>
-        <div class="page-controls">
-          <button :disabled="currentPage <= 1" @click="currentPage--">‹ Préc.</button>
-          <button :disabled="currentPage >= totalPages" @click="currentPage++">Suiv. ›</button>
+    <!-- Kanban board -->
+    <div v-else class="kanban-wrapper">
+      <div class="kanban">
+        <div
+          class="column"
+          v-for="s in [1,2,3]"
+          :key="s"
+          @dragover.prevent
+          @drop="onDrop($event, s)"
+          :style="columnStyle(s)"
+        >
+          <div class="col-head">
+            <h3>{{ statusLabel(s) }}</h3>
+            <div class="col-count">{{ ticketsForStatus(s).length }}</div>
+          </div>
+          <div class="col-body">
+            <div
+              v-for="ticket in ticketsForStatus(s)"
+              :key="ticket.id"
+              class="ticket-card"
+              draggable="true"
+              @dragstart="onDragStart($event, ticket.id)"
+              @click="openDetails(ticket)"
+            >
+              <div class="card-title">[{{ ticket.id }}] {{ ticket.name || '(sans titre)' }}</div>
+              <div class="card-meta">
+                <span class="muted">{{ typeLabel(ticket.type) }}</span>
+                <span class="dot">•</span>
+                <span class="muted">{{ priorityLabel(ticket.priority) }}</span>
+              </div>
+              <div class="card-actions">
+                <button class="btn-icon btn-edit" title="Modifier" @click.stop="openEdit(ticket)">✎</button>
+                <button class="btn-icon btn-delete" title="Supprimer" @click.stop="confirmDelete(ticket)">✕</button>
+              </div>
+            </div>
+            <div v-if="ticketsForStatus(s).length===0" class="empty-col">Aucun ticket</div>
+          </div>
         </div>
       </div>
     </div>
@@ -115,7 +106,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { glpiApi } from '../services/glpiApi.js'
-import { logs } from '../services/springApi.js'
+import { logs, preferences } from '../services/springApi.js'
 import TicketModal from '../components/Tickets/TicketModal.vue'
 import TicketDetails from '../components/Tickets/TicketDetails.vue'
 import { useRouter } from 'vue-router'
@@ -143,7 +134,18 @@ const PRIORITY_LABELS = { 1: 'Très basse', 2: 'Basse', 3: 'Moyenne', 4: 'Haute'
 const PRIORITY_CLASSES = { 1: 'p-vlow', 2: 'p-low', 3: 'p-med', 4: 'p-high', 5: 'p-vhigh', 6: 'p-major' }
 const TYPE_LABELS = { 1: 'Incident', 2: 'Demande' }
 
-function statusLabel(v) { return STATUS_LABELS[v] ?? String(v) }
+// Kanban settings (labels/colors) can be persisted in SQLite via spring preferences (key: 'kanban.settings')
+const kanbanSettings = ref({ labels: {}, colors: {} })
+
+function statusLabel(v) {
+  // prefer persisted label for statuses 1..3
+  if (kanbanSettings.value && kanbanSettings.value.labels && kanbanSettings.value.labels[v]) return kanbanSettings.value.labels[v]
+  return STATUS_LABELS[v] ?? String(v)
+}
+function columnStyle(v) {
+  const color = kanbanSettings.value?.colors?.[v]
+  return color ? { background: color } : {}
+}
 function statusClass(v) { return STATUS_CLASSES[v] ?? '' }
 function priorityLabel(v) { return PRIORITY_LABELS[v] ?? String(v) }
 function priorityClass(v) { return PRIORITY_CLASSES[v] ?? '' }
@@ -189,7 +191,64 @@ async function loadTickets() {
   }
 }
 
+// Kanban helpers
+function ticketsForStatus(statusId) {
+  return filteredTickets.value.filter((t) => Number(t.status) === Number(statusId))
+}
+
+function onDragStart(event, ticketId) {
+  event.dataTransfer.setData('text/plain', String(ticketId))
+}
+
+async function onDrop(event, newStatus) {
+  event.preventDefault()
+  const id = event.dataTransfer.getData('text/plain')
+  if (!id) return
+  const ticket = tickets.value.find((t) => String(t.id) === String(id))
+  if (!ticket) return
+  if (Number(ticket.status) === Number(newStatus)) return
+
+  // optional prompt when assigning
+  let extra = null
+  if (Number(newStatus) === 2) {
+    extra = window.prompt('Saisir un commentaire (optionnel) pour l\'assignation :')
+  }
+
+  const payload = { status: Number(newStatus) }
+  if (extra && extra.trim()) payload.content = (ticket.content ?? '') + '\n' + extra
+
+  try {
+    await glpiApi.patchItem('Ticket', ticket.id, payload)
+    // update local state
+    const idx = tickets.value.findIndex((t) => t.id === ticket.id)
+    if (idx !== -1) tickets.value[idx].status = Number(newStatus)
+    await logs.create({ action: 'PATCH', itemtype: 'Ticket', glpiId: ticket.id, payload: JSON.stringify({ input: payload }), status: 'SUCCESS' }).catch(()=>{})
+  } catch (e) {
+    await logs.create({ action: 'PATCH', itemtype: 'Ticket', glpiId: ticket.id, status: 'ERROR', errorMessage: e.message }).catch(()=>{})
+    alert('Erreur lors du changement de statut : ' + e.message)
+  }
+}
+
+
 onMounted(loadTickets)
+
+// load kanban settings
+async function loadKanbanSettings() {
+  try {
+    const pref = await preferences.get('kanban.settings')
+    if (pref && pref.value) {
+      try {
+        const val = JSON.parse(pref.value)
+        kanbanSettings.value = val || { labels: {}, colors: {} }
+      } catch (e) {
+        // ignore malformed
+      }
+    }
+  } catch (e) {
+    // ignore not found
+  }
+}
+onMounted(loadKanbanSettings)
 
 // ── Création / édition ──────────────────────────────────────────────────────
 
@@ -397,6 +456,22 @@ h1 {
 }
 
 .clickable-row { cursor: pointer; }
+
+/* Kanban styles */
+.kanban { display:flex; gap:1rem; align-items:flex-start }
+.column { background:var(--surface); border:1px solid var(--line); border-radius:12px; width:100%; max-width:360px; display:flex; flex-direction:column; min-height:260px }
+.col-head { display:flex; align-items:center; justify-content:space-between; padding:0.8rem 1rem; border-bottom:1px solid var(--line) }
+.col-head h3 { margin:0; font-size:1.05rem }
+.col-count { background:var(--primary); color:#fff; padding:0.15rem 0.6rem; border-radius:999px; font-weight:700 }
+.col-body { padding:0.8rem; display:flex; flex-direction:column; gap:0.6rem; min-height:120px }
+.ticket-card { background:#fff; border-radius:10px; padding:0.6rem; box-shadow:var(--shadow-sm); cursor:grab; display:flex; flex-direction:column; gap:0.4rem; position:relative }
+.ticket-card:active { cursor:grabbing }
+.card-title { font-weight:700; font-size:0.95rem }
+.card-meta { font-size:0.85rem; color:var(--muted) }
+.card-actions { position:absolute; right:8px; top:8px; display:flex; gap:0.3rem }
+.empty-col { color:var(--muted); font-style:italic; padding:0.6rem }
+
+@media (max-width:900px) { .kanban { flex-direction:column } .column { max-width:100% } }
 .col-id { width: 60px; }
 .col-type { width: 90px; }
 .col-status { width: 120px; }

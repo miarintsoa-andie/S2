@@ -9,6 +9,7 @@
       <RouterLink to="/tickets" class="nav-item"> <span>Tickets</span></RouterLink>
       <RouterLink to="/reinitialisation" class="nav-item"> <span>Réinitialisation</span></RouterLink>
       <RouterLink to="/elements" class="nav-item"> <span>Éléments</span></RouterLink>
+      <RouterLink to="/kanban-settings" class="nav-item"> <span>Enregistrer dans SQLite</span></RouterLink>
     </nav>
     <div class="sidebar-footer">
       <small>GLPI-NewApp</small>
